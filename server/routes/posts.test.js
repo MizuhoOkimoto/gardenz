@@ -58,4 +58,27 @@ describe('GET /api/v1/posts/:gardenid', () => {
         return null
       })
   })
+  it('empty post be undefined', () => {
+    db.getPostsByGardenId.mockImplementation(() => Promise.resolve())
+    return request(server)
+      .get('/api/v1/posts/1')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .then(res => {
+        expect(res.body.posts).not.toBeDefined()
+        return null
+      })
+  })
+  
+  it('responds with matched object', () => {
+    db.getPostsByGardenId.mockImplementation(() => Promise.resolve(mockPostsForGarden))
+    return request(server)
+      .get('/api/v1/posts/1')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .then(res => {
+        expect(res.body.posts).toMatchObject(mockPostsForGarden)
+        return null
+      })
+  })
 })
